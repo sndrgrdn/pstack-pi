@@ -16,8 +16,17 @@ An active pstack skill is the user's request to delegate wherever that skill pre
 | `Task` | The `subagent` tool from pi-subagents. |
 | `AskQuestion` | Ask in plain text in your reply, with the options as a numbered list. |
 | Open a todolist | Keep the list in your reply and update it at each phase. |
-| Run another pstack skill (`/name` or "the **name** skill") | `read` `<pstack>/skills/<name>/SKILL.md` and follow it. pstack skills are hidden from your skill catalog. When you tell the user to type it, write `/skill:<name>`. |
+| Run another pstack skill (`/name` or "the **name** skill") | `read` `<pstack>/skills/<name>/SKILL.md` and follow it. pstack skills are hidden from your skill catalog. When you tell the user to type it, use the Commands table. |
 | `Grep`, `Glob` | `bash` with `rg` or `find`. |
+
+## Commands
+
+| Cursor | Pi |
+| --- | --- |
+| `/poteto-mode <task>` with Enter, attached to one message | `/poteto-mode <task>` |
+| `/poteto-mode` as a Custom Mode (Option+Enter, Alt+Enter, or Use as Mode) | `/poteto-mode on`, until `/poteto-mode off` |
+| `/<skill>` | `/skill:<skill>` |
+| `/loop` | Not available on Pi. |
 
 ## Subagent fields
 
