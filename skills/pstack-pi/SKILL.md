@@ -77,7 +77,16 @@ Follow its steps with these changes:
 | `.cursor/rules/*.mdc`, always-applied rules | `AGENTS.md`. Pi never reads `.mdc` files. The model sheet is the exception. See Models. |
 | `https://github.com/cursor/plugins/blob/main/pstack/<path>` | `<pstack>/<path>` when that file exists. Read the local copy and never fetch it. Give the user the URL when they need a link. |
 | Transcripts in `~/.cursor/projects/<slug>/agent-transcripts/` | `~/.pi/agent/sessions/--<slug>--/`. The slug is the workspace path without its leading `/` and with each `/` changed to `-`, so `/Users/you/proj` is `--Users-you-proj--`. The newest `.jsonl` is the current session. Each line is an entry with `id` and `parentId`; follow `parentId` back from the last entry for the active branch. Read only this workspace's folder. |
-| `create-skill`, Cursor's skill authoring guidance | Pi's skills documentation and the Agent Skills specification. |
+| `create-skill`, Cursor's skill authoring guidance | `~/.agents/skills/writing-for-agents/SKILL.md`, then Pi's skills documentation. |
+
+## cursor-team-kit skills
+
+| pstack names | Pi |
+| --- | --- |
+| `deslop` (`/deslop`) | `<pstack>/../team-kit/deslop/SKILL.md`. Run it, then apply `~/.agents/skills/simplify/SKILL.md` to the same diff. Simplify keeps deslop's guardrails: behavior unchanged, focused edits. |
+| `control-ui` | The Playwright or Chrome DevTools MCP tools. |
+| `control-cli` | The `rex` skill to drive the CLI or TUI in a pane. |
+| `visualize` | A Mermaid diagram, or the `show-me` skill. |
 
 ## Cursor-only features
 

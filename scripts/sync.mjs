@@ -6,11 +6,13 @@ import { join, resolve } from "node:path";
 
 const REPOSITORY = "https://github.com/cursor/plugins.git";
 const UPSTREAM_PATH = "pstack";
+const TEAM_KIT_SKILLS = ["deslop"];
 const CURSOR_TERMS = /\.cursor\/|agent-transcripts|AskQuestion|subagent_type|\bTask\b|cloud agent|Graphite|Bugbot|cursor-team-kit|create-skill|grok-|composer-/;
 
 const root = resolve(import.meta.dirname, "..");
 const upstreamDir = join(root, "upstream");
 const agentsDir = join(root, "agents");
+const teamKitDir = join(root, "team-kit");
 const lockPath = join(root, "upstream.lock.json");
 const ref = process.argv[2] ?? "main";
 
@@ -19,11 +21,14 @@ const git = (args, cwd) => execFileSync("git", args, { cwd, encoding: "utf8" }).
 const checkout = mkdtempSync(join(tmpdir(), "pstack-sync-"));
 try {
   git(["clone", "--quiet", "--depth", "1", "--filter=blob:none", "--sparse", "--branch", ref, REPOSITORY, checkout]);
-  git(["sparse-checkout", "set", UPSTREAM_PATH], checkout);
+  git(["sparse-checkout", "set", UPSTREAM_PATH, ...TEAM_KIT_SKILLS.map((skill) => `cursor-team-kit/skills/${skill}`)], checkout);
   const commit = git(["rev-parse", "HEAD"], checkout);
 
   rmSync(upstreamDir, { recursive: true, force: true });
   cpSync(join(checkout, UPSTREAM_PATH), upstreamDir, { recursive: true });
+
+  rmSync(teamKitDir, { recursive: true, force: true });
+  for (const skill of TEAM_KIT_SKILLS) cpSync(join(checkout, "cursor-team-kit", "skills", skill), join(teamKitDir, skill), { recursive: true });
 
   rmSync(agentsDir, { recursive: true, force: true });
   mkdirSync(agentsDir);
@@ -32,15 +37,15 @@ try {
     writeFileSync(join(agentsDir, file), piAgent(readFileSync(join(upstreamDir, "agents", file), "utf8")));
   }
 
-  writeFileSync(lockPath, JSON.stringify({ repository: REPOSITORY, ref, path: UPSTREAM_PATH, commit }, null, 2) + "\n");
+  writeFileSync(lockPath, JSON.stringify({ repository: REPOSITORY, ref, path: UPSTREAM_PATH, teamKitSkills: TEAM_KIT_SKILLS, commit }, null, 2) + "\n");
   console.log(`Synced ${UPSTREAM_PATH} @ ${commit.slice(0, 12)}`);
 } finally {
   rmSync(checkout, { recursive: true, force: true });
 }
 
-console.log(git(["status", "--short", "--", "upstream", "agents", "upstream.lock.json"], root) || "No changes.");
+console.log(git(["status", "--short", "--", "upstream", "team-kit", "agents", "upstream.lock.json"], root) || "No changes.");
 
-const added = git(["diff", "--unified=0", "--", "upstream"], root)
+const added = git(["diff", "--unified=0", "--", "upstream", "team-kit"], root)
   .split("\n")
   .filter((line) => line.startsWith("+") && !line.startsWith("+++") && CURSOR_TERMS.test(line));
 if (added.length) {
