@@ -1,0 +1,22 @@
+{
+  "name": "pstack-pi",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Lauren Tan's pstack for Pi, unmodified, with a Pi harness adapter and pi-subagents agents.",
+  "keywords": ["pi-package"],
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "sync": "node scripts/sync.mjs"
+  },
+  "pi": {
+    "skills": ["./upstream/skills"],
+    "extensions": ["./extension/index.ts"],
+    "subagents": {
+      "agents": ["./agents"]
+    }
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*"
+  }
+}

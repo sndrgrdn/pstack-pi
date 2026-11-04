@@ -1,0 +1,14 @@
+{
+  "repository": "https://github.com/cursor/plugins.git",
+  "ref": "main",
+  "path": "pstack",
+  "commit": "bb68f2365eceafa0cb2d253112f675acf5f144cc",
+  "excluded": [
+    "automations",
+    "skills/make-bot-ui",
+    "skills/poteto-help",
+    "skills/poteto-mode/playbooks/autopilot-full.md",
+    "skills/poteto-mode/playbooks/autopilot-stack.md",
+    "skills/poteto-mode/playbooks/shipping.md"
+  ]
+}
