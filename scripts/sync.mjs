@@ -53,7 +53,7 @@ const added = git(["diff", "--unified=0", "--", "upstream"], root)
   .split("\n")
   .filter((line) => line.startsWith("+") && !line.startsWith("+++") && CURSOR_TERMS.test(line));
 if (added.length) {
-  console.log(`\nNew lines with Cursor terms; check pi/skills/pstack-pi/SKILL.md covers them:`);
+  console.log(`\nNew lines with Cursor terms; check skills/pstack-pi/SKILL.md covers them:`);
   for (const line of added) console.log(`  ${line.slice(0, 160)}`);
 }
 
@@ -61,7 +61,8 @@ function piAgent(text) {
   const match = text.match(/^---\n([\s\S]*?)\n---\n/);
   if (!match) throw new Error("Upstream agent has no frontmatter");
   const lines = match[1].split("\n");
+  const background = lines.some((line) => /^is_background:\s*true\s*$/.test(line));
   const kept = lines.filter((line) => !line.startsWith("is_background:"));
-  const pi = ["async: true", "inheritProjectContext: true"];
+  const pi = [...(background ? ["async: true"] : []), "inheritProjectContext: true", "skills: pstack-pi"];
   return `---\n${[...kept, ...pi].join("\n")}\n---\n${text.slice(match[0].length)}`;
 }

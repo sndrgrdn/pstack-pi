@@ -2,18 +2,27 @@
   "name": "pstack-pi",
   "private": true,
   "version": "0.1.0",
-  "description": "Lauren Tan's pstack for Pi, unmodified, with a Pi harness adapter and pi-subagents agents.",
-  "keywords": ["pi-package"],
+  "description": "Lauren Tan's pstack for Pi: upstream skills unmodified, a Pi adapter skill, pi-subagents agents, and a /poteto toggle.",
+  "keywords": [
+    "pi-package"
+  ],
   "license": "MIT",
   "type": "module",
   "scripts": {
     "sync": "node scripts/sync.mjs"
   },
   "pi": {
-    "skills": ["./upstream/skills"],
-    "extensions": ["./extension/index.ts"],
+    "skills": [
+      "./upstream/skills",
+      "./skills"
+    ],
+    "extensions": [
+      "./extensions"
+    ],
     "subagents": {
-      "agents": ["./agents"]
+      "agents": [
+        "./agents"
+      ]
     }
   },
   "peerDependencies": {

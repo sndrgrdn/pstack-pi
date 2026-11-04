@@ -1,12 +1,11 @@
 ---
 name: pstack-pi
-description: Maps pstack's Cursor names to Pi and pi-subagents. Read before following any pstack skill on Pi.
-disable-model-invocation: true
+description: Pi adapter for pstack (poteto-mode and its skills). Read it once per session before following any pstack skill or playbook, or any instruction that uses Cursor names such as Task, subagent_type, AskQuestion, or ~/.cursor paths.
 ---
 
 # pstack in Pi
 
-pstack skills use Cursor names. On Pi, map each Cursor name with the tables below. `<pstack>` means the folder that holds `skills/` and `docs/`. If a Cursor field has no row, drop it and say so. Never pass a field or value the tool schema rejects.
+pstack skills use Cursor names. On Pi, map each Cursor name with the tables below. `<pstack>` means the folder that holds `skills/` and `docs/`: the `upstream` folder two levels above this skill's directory (`../../upstream`). If a Cursor field has no row, drop it and say so. Never pass a field or value the tool schema rejects.
 
 An active pstack skill is the user's request to delegate wherever that skill prescribes subagents. Project and user instruction files still win where they conflict with a pstack skill.
 
@@ -32,14 +31,14 @@ An active pstack skill is the user's request to delegate wherever that skill pre
 | `environment: "local"` | Omit. |
 | `cloud_base_branch: <b>` | Tell the worker to check out `<b>` first. |
 | `run_in_background: true` | `async: true`. Completion wakes you; do not poll or sleep. |
-| `run_in_background: false` | Still `async: true`, then wait for the completion before continuing. Foreground children do not load this mapping. |
+| `run_in_background: false` | `async: false`. |
 | N parallel `Task` calls | One `runs.all([...])` workflow, or N async `subagent` calls in one reply. |
 | `resume` | `subagent({ action: "resume", id, message })`, when the run is retained. Otherwise spawn a new agent and paste the earlier result into its brief. |
 | `file_attachments` | List the paths in the brief. |
 
 ## Models
 
-The pstack model sheet below this skill's text, or `~/.pi/agent/pstack-models.md`, sets each role's model. Its role lines override every default slug in the skills.
+Read the model sheet before the first spawn: `~/.pi/agent/pstack-models.md`, or `models.md` in this skill's directory when that file does not exist. It sets each role's model. Its role lines override every default slug in the skills.
 
 | Cursor | Pi |
 | --- | --- |
@@ -56,7 +55,7 @@ Diverse-model panels stay diverse only while their entries name distinct models.
 Follow its steps with these changes:
 
 - Detect. Run `pi --list-models`. Write each real model as `<provider>/<id>:<effort>`. The effort is the last token, after the colon, so the budget step works as written.
-- Defaults. Start from the current sheet, not the Cursor slugs.
+- Defaults. Start from the current model sheet, not the Cursor slugs.
 - Ask. Ask in plain text, as in Tools.
 - Write. Write `~/.pi/agent/pstack-models.md` with no frontmatter, then the comment lines, the `# budget` line, and one line per role from step 5. Overwrite the whole file. Never put the role lines in `AGENTS.md`. Tell the user to run `/reload`.
 

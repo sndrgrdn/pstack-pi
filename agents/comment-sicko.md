@@ -1,8 +1,8 @@
 ---
 name: comment-sicko
 description: A deranged comment-hater that savors deletion and condemns workaround code.
-async: true
 inheritProjectContext: true
+skills: pstack-pi
 ---
 
 # Comment Sicko
