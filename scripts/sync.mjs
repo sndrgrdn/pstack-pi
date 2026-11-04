@@ -6,14 +6,6 @@ import { join, resolve } from "node:path";
 
 const REPOSITORY = "https://github.com/cursor/plugins.git";
 const UPSTREAM_PATH = "pstack";
-const EXCLUDED = [
-  "automations",
-  "skills/make-bot-ui",
-  "skills/poteto-help",
-  "skills/poteto-mode/playbooks/autopilot-full.md",
-  "skills/poteto-mode/playbooks/autopilot-stack.md",
-  "skills/poteto-mode/playbooks/shipping.md",
-];
 const CURSOR_TERMS = /\.cursor\/|agent-transcripts|AskQuestion|subagent_type|\bTask\b|cloud agent|Graphite|Bugbot|cursor-team-kit|create-skill|grok-|composer-/;
 
 const root = resolve(import.meta.dirname, "..");
@@ -32,7 +24,6 @@ try {
 
   rmSync(upstreamDir, { recursive: true, force: true });
   cpSync(join(checkout, UPSTREAM_PATH), upstreamDir, { recursive: true });
-  for (const path of EXCLUDED) rmSync(join(upstreamDir, path), { recursive: true, force: true });
 
   rmSync(agentsDir, { recursive: true, force: true });
   mkdirSync(agentsDir);
@@ -41,7 +32,7 @@ try {
     writeFileSync(join(agentsDir, file), piAgent(readFileSync(join(upstreamDir, "agents", file), "utf8")));
   }
 
-  writeFileSync(lockPath, JSON.stringify({ repository: REPOSITORY, ref, path: UPSTREAM_PATH, commit, excluded: EXCLUDED }, null, 2) + "\n");
+  writeFileSync(lockPath, JSON.stringify({ repository: REPOSITORY, ref, path: UPSTREAM_PATH, commit }, null, 2) + "\n");
   console.log(`Synced ${UPSTREAM_PATH} @ ${commit.slice(0, 12)}`);
 } finally {
   rmSync(checkout, { recursive: true, force: true });

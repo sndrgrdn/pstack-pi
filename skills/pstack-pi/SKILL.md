@@ -72,7 +72,7 @@ Follow its steps with these changes:
 
 ## Cursor-only features
 
-Pi has no Cursor Automations, Bugbot, Cursor cloud agents, Graphite, `cursor-team-kit`, or built-in PR tool. These pstack parts are not installed: `poteto-help`, `make-bot-ui`, and the `autopilot-full`, `autopilot-stack`, and `shipping` playbooks. When a step needs one of them, put one line in your reply, `Skipped in Pi: <step>. <reason>.`, then go on to the next step. Do not stop, ask, or retry. When a later step needs what the skipped step made, leave a placeholder and name it in the line.
+Pi has no Cursor Automations, Bugbot, Cursor cloud agents, Graphite, `cursor-team-kit`, or built-in PR tool. When a step needs one of them, put one line in your reply, `Skipped in Pi: <step>. <reason>.`, then go on to the next step. Do not stop, ask, or retry. When a later step needs what the skipped step made, leave a placeholder and name it in the line.
 
 | Cursor | Pi |
 | --- | --- |
