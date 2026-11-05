@@ -86,7 +86,7 @@ Follow its steps with these changes:
 | `deslop` (`/deslop`) | `<pstack>/../team-kit/deslop/SKILL.md`. |
 | `control-ui` | The Playwright or Chrome DevTools MCP tools. |
 | `control-cli` | The `rex` skill to drive the CLI or TUI in a pane. |
-| `visualize` | A Mermaid diagram. |
+| `visualize` | A Mermaid diagram, or the `show-me` skill. |
 
 ## Cursor-only features
 
