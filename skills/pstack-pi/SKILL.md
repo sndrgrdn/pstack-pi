@@ -83,10 +83,10 @@ Follow its steps with these changes:
 
 | pstack names | Pi |
 | --- | --- |
-| `deslop` (`/deslop`) | `<pstack>/../team-kit/deslop/SKILL.md`. Run it, then apply `~/.agents/skills/simplify/SKILL.md` to the same diff. Simplify keeps deslop's guardrails: behavior unchanged, focused edits. |
+| `deslop` (`/deslop`) | `<pstack>/../team-kit/deslop/SKILL.md`. |
 | `control-ui` | The Playwright or Chrome DevTools MCP tools. |
 | `control-cli` | The `rex` skill to drive the CLI or TUI in a pane. |
-| `visualize` | A Mermaid diagram, or the `show-me` skill. |
+| `visualize` | A Mermaid diagram. |
 
 ## Cursor-only features
 
