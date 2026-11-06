@@ -14,6 +14,8 @@ const upstreamDir = join(root, "upstream");
 const agentsDir = join(root, "agents");
 const teamKitDir = join(root, "team-kit");
 const lockPath = join(root, "upstream.lock.json");
+const modelsPath = join(root, "skills", "pstack-pi", "models.md");
+const PI_PROVIDERS = { claude: "anthropic", grok: "xai" };
 const ref = process.argv[2] ?? "main";
 
 const git = (args, cwd) => execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
@@ -37,13 +39,15 @@ try {
     writeFileSync(join(agentsDir, file), piAgent(readFileSync(join(upstreamDir, "agents", file), "utf8")));
   }
 
+  writeFileSync(modelsPath, piModels(readFileSync(join(upstreamDir, "skills", "setup-pstack", "SKILL.md"), "utf8")));
+
   writeFileSync(lockPath, JSON.stringify({ repository: REPOSITORY, ref, path: UPSTREAM_PATH, teamKitSkills: TEAM_KIT_SKILLS, commit }, null, 2) + "\n");
   console.log(`Synced ${UPSTREAM_PATH} @ ${commit.slice(0, 12)}`);
 } finally {
   rmSync(checkout, { recursive: true, force: true });
 }
 
-console.log(git(["status", "--short", "--", "upstream", "team-kit", "agents", "upstream.lock.json"], root) || "No changes.");
+console.log(git(["status", "--short", "--", "upstream", "team-kit", "agents", "upstream.lock.json", modelsPath], root) || "No changes.");
 
 const added = git(["diff", "--unified=0", "--", "upstream", "team-kit"], root)
   .split("\n")
@@ -51,6 +55,14 @@ const added = git(["diff", "--unified=0", "--", "upstream", "team-kit"], root)
 if (added.length) {
   console.log(`\nNew lines with Cursor terms; check skills/pstack-pi/SKILL.md covers them:`);
   for (const line of added) console.log(`  ${line.slice(0, 160)}`);
+}
+
+function piModels(text) {
+  const block = text.match(/```\n---\n[\s\S]*?\n---\n(# pstack model configuration[\s\S]*?)```/);
+  if (!block) throw new Error("setup-pstack has no model template");
+  return block[1]
+    .replace("(omit Task `model`)", "(omit `model`)")
+    .replace(/\b((claude|grok)-[a-z0-9.-]+?)-(max|xhigh|high|medium|low)(-fast)?\b/g, (_, id, family, effort) => `${PI_PROVIDERS[family]}/${id}:${effort}`);
 }
 
 function piAgent(text) {
