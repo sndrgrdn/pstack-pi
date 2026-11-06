@@ -51,7 +51,7 @@ Read the model sheet before the first spawn: `~/.pi/agent/pstack-models.md`, or 
 
 | Cursor | Pi |
 | --- | --- |
-| A role value `<provider>/<id>:<effort>`, such as `meridian/claude-opus-5-5:xhigh` | `model: "meridian/claude-opus-5-5:xhigh"`. |
+| A role value `<provider>/<id>:<effort>`, such as `anthropic/claude-opus-5-5:xhigh` | `model: "anthropic/claude-opus-5-5:xhigh"`. |
 | `claude-<family>-<version>-<effort>[-fast]` with no role line | The sheet's line for the same family. Drop `-fast`. |
 | A `grok-*`, `gpt-*`, or other default slug with no role line | The sheet's `feature, refactoring` line. |
 | `auto` or `inherit-parent` | Omit `model`. |
@@ -97,3 +97,10 @@ Pi has no Cursor Automations, Bugbot, Cursor cloud agents, Graphite, `cursor-tea
 | Bugbot | Bugbot comments on a GitHub PR are ordinary review threads, so triage them with `gh`. Skip a step that starts, waits for, or configures Bugbot. |
 | Graphite (`gt`) | `git` and `gh`: one branch and one PR per unit. |
 | A built-in PR tool | `gh pr create`. That is not a skip, so write no line. |
+
+## Writing the reply
+
+On Pi, these rules replace the first and third bullets of poteto-mode's "Writing the reply" section. The other bullets still apply.
+
+- Write full sentences in plain English. A sentence may join related ideas with words such as "because", "so", or "which" when that makes the point easier to follow.
+- A colon may join two parts of a sentence. The long-dash character is still out.
