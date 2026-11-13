@@ -1,14 +1,15 @@
 import type { CompactionEntry, ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { convertToLlm, serializeConversation } from "@earendil-works/pi-coding-agent";
 import { uuidv7 } from "@earendil-works/pi-ai";
-import { adapterPath, potetoModePath, potetoSkills, root } from "../lib/poteto-skills.ts";
+import { adapterPath, modelSheet, potetoModePath, potetoSkills, root } from "../lib/poteto-skills.ts";
 
 const MODE = "poteto-mode";
 const SECTION = "poteto_mode";
 
-const instructions = () => `Poteto mode is on and governs every request. ${potetoSkills()}`;
+const instructions = () =>
+  `Poteto mode is on and governs every request. ${potetoSkills()}\n\nThe model sheet below is current: set the model and effort of every spawn from it.\n\n${modelSheet()}`;
 const rereadReminder = (skillFiles: string[]) =>
-  `The conversation was compacted, so the playbooks, principles and other skills you read are no longer in context. The poteto-mode and pstack-pi skills are still in your system prompt. Before acting, read these in full again:\n${(skillFiles.length ? skillFiles : ["the active playbook"]).map((path) => `- ${path}`).join("\n")}`;
+  `The conversation was compacted. The poteto-mode and pstack-pi skills and the model sheet remain in your system prompt. Before acting, read these in full again:\n${(skillFiles.length ? skillFiles : ["the active playbook"]).map((path) => `- ${path}`).join("\n")}`;
 
 const summaryPrompt = (conversation: string, previousSummary?: string, focus?: string) => `Write the summary that replaces the conversation below in the context of a lead agent running poteto mode. The most recent messages stay word for word, next to your summary.
 

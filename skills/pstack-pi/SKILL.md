@@ -47,7 +47,7 @@ An active pstack skill is the user's request to delegate wherever that skill pre
 
 ## Models
 
-Read the model sheet before the first spawn: `~/.pi/agent/pstack-models.md`, or `models.md` in this skill's directory when that file does not exist. It sets each role's model. Its role lines override every default slug in the skills.
+The model sheet sets each role's model and effort. Take it from your system prompt when it is there. Else read it before the first spawn: `~/.pi/agent/pstack-models.md`, with `models.md` in this skill's directory as the fallback. Its role lines override every default slug in the skills. Its comment lines are rules: a comment line on raising or lowering effort, or on changing model, replaces poteto-mode's rule for that.
 
 | Cursor | Pi |
 | --- | --- |
@@ -66,7 +66,7 @@ Follow its steps with these changes:
 - Detect. Run `pi --list-models`. Write each real model as `<provider>/<id>:<effort>`. The effort is the last token, after the colon, so the budget step works as written.
 - Defaults. Start from the current model sheet, not the Cursor slugs.
 - Ask. Ask in plain text, as in Tools.
-- Write. Write `~/.pi/agent/pstack-models.md` with no frontmatter, then the comment lines, the `# budget` line, and one line per role from step 5. Overwrite the whole file. Never put the role lines in `AGENTS.md`. Tell the user to run `/reload`.
+- Write. Write `~/.pi/agent/pstack-models.md` with no frontmatter, then the comment lines, the `# budget` line, and one line per role from step 5. Rewrite the whole file and carry over every other comment line of the current sheet. Never put the role lines in `AGENTS.md`. Tell the user to run `/reload`.
 
 ## Paths
 
