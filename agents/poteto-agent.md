@@ -4,7 +4,7 @@ description: Delegate subagent for code-writing and helper tasks spawned during 
 async: true
 advertise: true
 inheritProjectContext: true
-skills: pstack-pi
+subagentOnlyExtensions: ../child-extensions/poteto-agent.ts
 ---
 
 # Poteto subagent

@@ -71,7 +71,7 @@ function piAgent(text) {
   const lines = match[1].split("\n");
   const background = lines.some((line) => /^is_background:\s*true\s*$/.test(line));
   const kept = lines.filter((line) => !line.startsWith("is_background:"));
-  const advertised = lines.includes("name: poteto-agent");
-  const pi = [...(background ? ["async: true"] : []), ...(advertised ? ["advertise: true"] : []), "inheritProjectContext: true", "skills: pstack-pi"];
+  const poteto = lines.includes("name: poteto-agent");
+  const pi = [...(background ? ["async: true"] : []), ...(poteto ? ["advertise: true"] : []), "inheritProjectContext: true", ...(poteto ? ["subagentOnlyExtensions: ../child-extensions/poteto-agent.ts"] : ["skills: pstack-pi"])];
   return `---\n${[...kept, ...pi].join("\n")}\n---\n${text.slice(match[0].length)}`;
 }

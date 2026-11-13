@@ -1,18 +1,14 @@
 import type { CompactionEntry, ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { convertToLlm, serializeConversation } from "@earendil-works/pi-coding-agent";
 import { uuidv7 } from "@earendil-works/pi-ai";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { adapterPath, potetoModePath, potetoSkills, root } from "../lib/poteto-skills.ts";
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const potetoModePath = join(root, "upstream", "skills", "poteto-mode", "SKILL.md");
-const adapterPath = join(root, "skills", "pstack-pi", "SKILL.md");
 const MODE = "poteto-mode";
 const SECTION = "poteto_mode";
 
-const instructions = `Poteto mode governs every request: follow ${potetoModePath}, mapped to Pi by ${adapterPath}. Read both in full once per session, and again after each compaction, before acting.`;
+const instructions = () => `Poteto mode is on and governs every request. ${potetoSkills()}`;
 const rereadReminder = (skillFiles: string[]) =>
-  `The conversation was compacted, so the skills, playbooks and principles you read are no longer in context. Before acting, read these in full again:\n${[potetoModePath, adapterPath, ...skillFiles].map((path) => `- ${path}`).join("\n")}${skillFiles.length ? "" : "\n- the active playbook"}`;
+  `The conversation was compacted, so the playbooks, principles and other skills you read are no longer in context. The poteto-mode and pstack-pi skills are still in your system prompt. Before acting, read these in full again:\n${(skillFiles.length ? skillFiles : ["the active playbook"]).map((path) => `- ${path}`).join("\n")}`;
 
 const summaryPrompt = (conversation: string, previousSummary?: string, focus?: string) => `Write the summary that replaces the conversation below in the context of a lead agent running poteto mode. The most recent messages stay word for word, next to your summary.
 
@@ -139,7 +135,7 @@ export default function (pi: ExtensionAPI) {
   });
 
   pi.on("before_agent_start", async (event) => {
-    if (on) event.systemPromptOptions.sections[SECTION] = instructions;
+    if (on) event.systemPromptOptions.sections[SECTION] = instructions();
     else delete event.systemPromptOptions.sections[SECTION];
   });
 

@@ -30,7 +30,9 @@ For what each skill and playbook does, read the [upstream README](./upstream/REA
 | `agents/` | The upstream agents, with the frontmatter that pi-subagents reads. |
 | `skills/pstack-pi/SKILL.md` | The adapter. It maps Cursor tools, subagent fields, model names, paths, and commands to Pi. |
 | `skills/pstack-pi/models.md` | The fallback model sheet, generated from upstream's defaults. |
-| `extensions/poteto-mode.ts` | The `/poteto-mode` command. |
+| `extensions/poteto-mode.ts` | The `/poteto-mode` command. While the mode is on, it keeps the poteto-mode and adapter skills in the system prompt. |
+| `child-extensions/poteto-agent.ts` | Loaded only in `poteto-agent` subagents. It puts the same two skills in their system prompt. |
+| `lib/poteto-skills.ts` | The skill text both extensions share. |
 
 ## Sync with upstream
 
