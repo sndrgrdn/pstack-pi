@@ -15,7 +15,7 @@ An active pstack skill is the user's request to delegate wherever that skill pre
 | --- | --- |
 | `Task` | The `subagent` tool from pi-subagents. |
 | `AskQuestion` | Ask in plain text in your reply, with the options as a numbered list. |
-| Open a todolist | Keep the list in your reply and update it at each phase. |
+| Open a todolist | Show the list in your first reply, carry it forward yourself, and show it again in the final report with each step's outcome. |
 | Run another pstack skill (`/name` or "the **name** skill") | `read` `<pstack>/skills/<name>/SKILL.md` and follow it. pstack skills are hidden from your skill catalog. When you tell the user to type it, use the Commands table. |
 | `Grep`, `Glob` | `bash` with `rg` or `find`. |
 
@@ -100,7 +100,9 @@ Pi has no Cursor Automations, Bugbot, Cursor cloud agents, Graphite, `cursor-tea
 
 ## Writing the reply
 
-On Pi, these rules replace the first and third bullets of poteto-mode's "Writing the reply" section. The other bullets still apply.
+While work remains (a subagent running, a playbook step left, a process you wait on), your reply is a **status line**: one sentence that names what is running and what you wait for. A blocker or a decision the user must make adds one sentence. Within a turn, go straight from one tool call to the next. Findings, reasoning and the todolist go in the **final report**, the reply after the last step.
+
+For the final report, these rules replace the first and third bullets of poteto-mode's "Writing the reply" section. The other bullets still apply.
 
 - Write full sentences in plain English. A sentence may join related ideas with words such as "because", "so", or "which" when that makes the point easier to follow.
 - A colon may join two parts of a sentence. The long-dash character is still out.
