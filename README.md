@@ -17,7 +17,7 @@ pi install git:github.com/sndrgrdn/pstack-pi
 - `/poteto-mode on` keeps poteto mode on for every message until you run `/poteto-mode off`.
 - `/skill:setup-pstack` picks the model for each role and writes your choices to `~/.pi/agent/pstack-models.md`. Run `/reload` afterward.
 
-Without `~/.pi/agent/pstack-models.md`, pstack uses the upstream defaults: `xai/grok-4.7` for code and `anthropic/claude-opus-5-5` for prose and judgment.
+Without `~/.pi/agent/pstack-models.md`, pstack uses the upstream defaults: `anthropic/claude-opus-5-5` for code, prose, and judgment, and a Fable 5.2, Opus 5.5, and Gemini 4 Neon panel for reviews.
 
 For what each skill and playbook does, read the [upstream README](./upstream/README.md).
 

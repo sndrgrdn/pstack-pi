@@ -15,7 +15,7 @@ const agentsDir = join(root, "agents");
 const teamKitDir = join(root, "team-kit");
 const lockPath = join(root, "upstream.lock.json");
 const modelsPath = join(root, "skills", "pstack-pi", "models.md");
-const PI_PROVIDERS = { claude: "anthropic", grok: "xai" };
+const PI_PROVIDERS = { claude: "anthropic", gemini: "google", grok: "xai" };
 const ref = process.argv[2] ?? "main";
 
 const git = (args, cwd) => execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
@@ -61,8 +61,8 @@ function piModels(text) {
   const block = text.match(/```\n---\n[\s\S]*?\n---\n(# pstack model configuration[\s\S]*?)```/);
   if (!block) throw new Error("setup-pstack has no model template");
   return block[1]
-    .replace("(omit Task `model`)", "(omit `model`)")
-    .replace(/\b((claude|grok)-[a-z0-9.-]+?)-(max|xhigh|high|medium|low)(-fast)?\b/g, (_, id, family, effort) => `${PI_PROVIDERS[family]}/${id}:${effort}`);
+    .replace("Task `model`", "`model`")
+    .replace(/\b((claude|gemini|grok)-[a-z0-9.-]+?)-(max|xhigh|high|medium|low)(-fast)?\b/g, (_, id, family, effort) => `${PI_PROVIDERS[family]}/${id}:${effort}`);
 }
 
 function piAgent(text) {
@@ -70,7 +70,7 @@ function piAgent(text) {
   if (!match) throw new Error("Upstream agent has no frontmatter");
   const lines = match[1].split("\n");
   const background = lines.some((line) => /^is_background:\s*true\s*$/.test(line));
-  const kept = lines.filter((line) => !line.startsWith("is_background:"));
+  const kept = lines.filter((line) => !/^(is_background|model):/.test(line));
   const poteto = lines.includes("name: poteto-agent");
   const pi = [...(background ? ["async: true"] : []), ...(poteto ? ["advertise: true"] : []), "inheritProjectContext: true", ...(poteto ? ["subagentOnlyExtensions: ../child-extensions/poteto-agent.ts"] : ["skills: pstack-pi"])];
   return `---\n${[...kept, ...pi].join("\n")}\n---\n${text.slice(match[0].length)}`;

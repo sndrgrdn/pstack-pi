@@ -52,7 +52,7 @@ The model sheet sets each role's model and effort. Take it from your system prom
 | Cursor | Pi |
 | --- | --- |
 | A role value `<provider>/<id>:<effort>`, such as `anthropic/claude-opus-5-5:xhigh` | `model: "anthropic/claude-opus-5-5:xhigh"`. |
-| `claude-<family>-<version>-<effort>[-fast]` with no role line | The sheet's line for the same family. Drop `-fast`. |
+| `claude-<family>-<version>-<effort>[-fast]` or `gemini-<version>-<name>-<effort>` with no role line | The sheet's line for the same family. Drop `-fast`. |
 | A `grok-*`, `gpt-*`, or other default slug with no role line | The sheet's `feature, refactoring` line. |
 | `auto` or `inherit-parent` | Omit `model`. |
 | `~/.cursor/rules/pstack-models.mdc` | `~/.pi/agent/pstack-models.md`. |
@@ -66,7 +66,7 @@ Follow its steps with these changes:
 - Detect. Run `pi --list-models`. Write each real model as `<provider>/<id>:<effort>`. The effort is the last token, after the colon, so the budget step works as written.
 - Defaults. Start from the current model sheet, not the Cursor slugs.
 - Ask. Ask in plain text, as in Tools.
-- Write. Write `~/.pi/agent/pstack-models.md` with no frontmatter, then the comment lines, the `# budget` line, and one line per role from step 5. Rewrite the whole file and carry over every other comment line of the current sheet. Never put the role lines in `AGENTS.md`. Tell the user to run `/reload`.
+- Write. Write `~/.pi/agent/pstack-models.md` with no frontmatter, then the comment lines, the `# defaults: 3` line, the `# budget` line, and one line per role from step 5. Rewrite the whole file and carry over every other comment line of the current sheet. Never put the role lines in `AGENTS.md`. Tell the user to run `/reload`.
 
 ## Paths
 
@@ -90,7 +90,7 @@ Follow its steps with these changes:
 
 ## Cursor-only features
 
-Pi has no Cursor Automations, Bugbot, Cursor cloud agents, Graphite, `cursor-team-kit`, or built-in PR tool. When a step needs one of them, put one line in your reply, `Skipped in Pi: <step>. <reason>.`, then go on to the next step. Do not stop, ask, or retry. When a later step needs what the skipped step made, leave a placeholder and name it in the line.
+Pi has no Cursor Automations, Bugbot, Cursor cloud agents, Cursor Projects, Graphite, `cursor-team-kit`, or built-in PR tool. When a step needs one of them, put one line in your reply, `Skipped in Pi: <step>. <reason>.`, then go on to the next step. Do not stop, ask, or retry. When a later step needs what the skipped step made, leave a placeholder and name it in the line.
 
 | Cursor | Pi |
 | --- | --- |
