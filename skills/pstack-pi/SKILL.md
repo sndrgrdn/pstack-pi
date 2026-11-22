@@ -15,9 +15,9 @@ An active pstack skill is the user's request to delegate wherever that skill pre
 | --- | --- |
 | `Task` | The `subagent` tool from pi-subagents. |
 | `AskQuestion` | Ask in plain text in your reply, with the options as a numbered list. |
-| Open a todolist | Show the list in your first reply, carry it forward yourself, and show it again in the final report with each step's outcome. |
+| Open a todolist, or copy steps into the todolist tool | Use a todo tool if the session offers one. Otherwise show the list in your first reply, carry it forward yourself, and show it again in the final report with each step's outcome. |
 | Run another pstack skill (`/name` or "the **name** skill") | `read` `<pstack>/skills/<name>/SKILL.md` and follow it. pstack skills are hidden from your skill catalog. When you tell the user to type it, use the Commands table. |
-| `Grep`, `Glob` | `bash` with `rg` or `find`. |
+| `Grep`, `Glob` | Pi's `grep` and `find` tools when the session has them. Otherwise `bash` with `rg` or `find`. |
 
 ## Commands
 
@@ -33,7 +33,7 @@ An active pstack skill is the user's request to delegate wherever that skill pre
 | Cursor | pi-subagents |
 | --- | --- |
 | `subagent_type: "poteto-agent"`, `"comment-sicko"` | `agent: "poteto-agent"`, `agent: "comment-sicko"`. Always put the absolute path of `<pstack>/skills/poteto-mode/SKILL.md` in a `poteto-agent` brief. |
-| `subagent_type: generalPurpose` | The general-purpose agent this session lists (`general-purpose`, else `delegate`). If none is listed, use `poteto-agent`. |
+| `subagent_type: generalPurpose` | The general-purpose agent this session lists: a user agent named `general-purpose`, else pi-subagents' builtin `delegate`. If neither is listed, use `poteto-agent`. |
 | `readonly: true` | The same agent, with "do not edit files" in the brief. Check `git status` afterward. |
 | `readonly: false` | Omit. |
 | `environment: "cloud"` | `worktree: true`. Name the branch or commit the worker checks out. |
@@ -41,7 +41,7 @@ An active pstack skill is the user's request to delegate wherever that skill pre
 | `cloud_base_branch: <b>` | Tell the worker to check out `<b>` first. |
 | `run_in_background: true` | `async: true`. Completion wakes you; do not poll or sleep. |
 | `run_in_background: false` | `async: false`. |
-| N parallel `Task` calls | One `runs.all([...])` workflow, or N async `subagent` calls in one reply. |
+| N parallel `Task` calls | One ```` ```js workflow ```` block that awaits `runs.all([...])`, with `subagent({ workflow: true })` in the same reply, or N async `subagent` calls in one reply. |
 | `resume` | `subagent({ action: "resume", id, message })`, when the run is retained. Otherwise spawn a new agent and paste the earlier result into its brief. |
 | `file_attachments` | List the paths in the brief. |
 
@@ -76,7 +76,7 @@ Follow its steps with these changes:
 | `~/.cursor/plugins/`, `.cursor-plugin/plugin.json` | `<pstack>`, `<pstack>/plugin.json` |
 | `.cursor/rules/*.mdc`, always-applied rules | `AGENTS.md`. Pi never reads `.mdc` files. The model sheet is the exception. See Models. |
 | `https://github.com/cursor/plugins/blob/main/pstack/<path>` | `<pstack>/<path>` when that file exists. Read the local copy and never fetch it. Give the user the URL when they need a link. |
-| Transcripts in `~/.cursor/projects/<slug>/agent-transcripts/` | `~/.pi/agent/sessions/--<slug>--/`. The slug is the workspace path without its leading `/` and with each `/` changed to `-`, so `/Users/you/proj` is `--Users-you-proj--`. The newest `.jsonl` is the current session. Each line is an entry with `id` and `parentId`; follow `parentId` back from the last entry for the active branch. Read only this workspace's folder. |
+| Transcripts in `~/.cursor/projects/<slug>/agent-transcripts/` | `~/.pi/agent/sessions/--<slug>--/`. The slug is the workspace path without its leading `/` and with each `/`, `\`, and `:` changed to `-`, so `/Users/you/proj` is `--Users-you-proj--`. The newest `.jsonl` is the current session. After the session header on the first line, each line is an entry with `id` and `parentId`; follow `parentId` back from the last entry for the active branch. Read only this workspace's folder. |
 | `create-skill`, Cursor's skill authoring guidance | `~/.agents/skills/writing-for-agents/SKILL.md`, then Pi's skills documentation. |
 
 ## cursor-team-kit skills
@@ -84,7 +84,7 @@ Follow its steps with these changes:
 | pstack names | Pi |
 | --- | --- |
 | `deslop` (`/deslop`) | `<pstack>/../team-kit/deslop/SKILL.md`. |
-| `control-ui` | The Playwright or Chrome DevTools MCP tools. |
+| `control-ui` | A browser MCP server this session has, such as Playwright, Chrome DevTools, or `browse`. |
 | `control-cli` | The `rex` skill to drive the CLI or TUI in a pane. |
 | `visualize` | A Mermaid diagram, or the `show-me` skill. |
 
@@ -94,15 +94,16 @@ Pi has no Cursor Automations, Bugbot, Cursor cloud agents, Cursor Projects, Grap
 
 | Cursor | Pi |
 | --- | --- |
-| Bugbot | Bugbot comments on a GitHub PR are ordinary review threads, so triage them with `gh`. Skip a step that starts, waits for, or configures Bugbot. |
+| Bugbot | Bugbot comments on a GitHub PR are ordinary review threads, so triage them with the forge command that the step gives. Skip a step that starts, waits for, or configures Bugbot when the PR has no Bugbot check or comment. |
 | Graphite (`gt`) | `git` and `gh`: one branch and one PR per unit. |
-| A built-in PR tool | `gh pr create`. That is not a skip, so write no line. |
+| Cursor cloud agents | `environment: "cloud"` maps to a worktree, as in Subagent fields. Skip a step that needs the cloud agent itself, such as its dashboard status or its own machine. |
+| A built-in PR tool | The forge command that the step gives, such as `gh pr create`. That is not a skip, so write no line. |
 
 ## Writing the reply
 
 While work remains (a subagent running, a playbook step left, a process you wait on), your reply is a **status line**: one sentence that names what is running and what you wait for. A blocker or a decision the user must make adds one sentence. Within a turn, go straight from one tool call to the next. Findings, reasoning and the todolist go in the **final report**, the reply after the last step.
 
-For the final report, these rules replace the first and third bullets of poteto-mode's "Writing the reply" section. The other bullets still apply.
+For the final report, these rules replace poteto-mode's "Writing the reply" rules on short declarative sentences and on the colon as a connector. Its other rules still apply.
 
 - Write full sentences in plain English. A sentence may join related ideas with words such as "because", "so", or "which" when that makes the point easier to follow.
 - A colon may join two parts of a sentence. The long-dash character is still out.
