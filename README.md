@@ -14,7 +14,7 @@ pi install git:github.com/sndrgrdn/pstack-pi
 ## Use it
 
 - `/poteto-mode <task>` runs one task in poteto mode.
-- `/poteto-mode on` keeps poteto mode on for every message until you run `/poteto-mode off`.
+- `/poteto-mode on` keeps poteto mode on for every message until you run `/poteto-mode off`. A bare `/poteto-mode` toggles it.
 - `/skill:setup-pstack` picks the model for each role and writes your choices to `~/.pi/agent/pstack-models.md`. Run `/reload` afterward.
 
 Without `~/.pi/agent/pstack-models.md`, pstack uses the upstream defaults: `anthropic/claude-opus-5-5` for code, prose, and judgment, and a Fable 5.2, Opus 5.5, and Gemini 4 Neon panel for reviews.
@@ -30,17 +30,17 @@ For what each skill and playbook does, read the [upstream README](./upstream/REA
 | `agents/` | The upstream agents, with the frontmatter that pi-subagents reads. |
 | `skills/pstack-pi/SKILL.md` | The adapter. It maps Cursor tools, subagent fields, model names, paths, and commands to Pi. |
 | `skills/pstack-pi/models.md` | The fallback model sheet, generated from upstream's defaults. |
-| `extensions/poteto-mode.ts` | The `/poteto-mode` command. While the mode is on, it keeps the poteto-mode and adapter skills and the model sheet in the system prompt. |
+| `extensions/poteto-mode.ts` | The `/poteto-mode` command. While the mode is on, it keeps the poteto-mode and adapter skills and the model sheet in the system prompt, blocks subagent spawns that pass no model, and writes its own compaction summary. |
 | `child-extensions/poteto-agent.ts` | Loaded only in `poteto-agent` subagents. It puts the same two skills in their system prompt. |
 | `lib/poteto-skills.ts` | The skill text both extensions share, and the model sheet. |
 
 ## Sync with upstream
 
-`npm run sync` copies the latest `pstack` from `cursor/plugins` `main`. It regenerates `agents/` and `skills/pstack-pi/models.md`, then records the upstream commit in `upstream.lock.json`. Pass a branch or tag to sync a different ref: `node scripts/sync.mjs <ref>`.
+Syncing is manual. When upstream changes, run `npm run sync`, usually through an agent, and commit the result.
 
-The sync also prints new upstream lines that use Cursor-only names. Check that the adapter covers each one.
+The sync copies the latest `pstack` and `cursor-team-kit/skills/deslop` from `cursor/plugins` `main`. It regenerates `agents/` and `skills/pstack-pi/models.md`, then records the upstream commit in `upstream.lock.json`. Pass a branch or tag to sync a different ref: `node scripts/sync.mjs <ref>`.
 
-A GitHub Actions workflow runs the sync every Monday. It opens a pull request when skill or agent files change.
+The sync also prints new upstream lines that use Cursor-only names. Check that the adapter covers each one, and update `skills/pstack-pi/SKILL.md` or `scripts/sync.mjs` where it does not.
 
 ## License
 
